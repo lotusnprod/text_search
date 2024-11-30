@@ -17,9 +17,14 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
     depends_on:
       - backend
+  indigo:
+    image: epmlsop/indigo-service:latest
+    ports:
+      - "8002:80"
+    restart: always
 
 volumes:
     backend_data:

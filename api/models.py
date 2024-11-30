@@ -149,3 +149,11 @@ class AutocompleteTaxa(BaseModel):
 class DepictionStructure(BaseModel):
     structure: str
     highlight: str | None = None
+
+class StructureDetails(BaseModel):
+    inchi: str
+    smiles: str
+    formula: str
+    inchi_no_stereo: str
+    inchikey: str
+    properties: dict[str, float]

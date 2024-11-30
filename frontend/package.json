@@ -1,34 +1,40 @@
 {
-  "name": "frontend",
+  "name": "lotus-search",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@mdi/font": "7.0.96",
-    "axios": "^1.6.5",
-    "pinia": "^2.1.7",
-    "roboto-fontface": "^0.10.0",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5",
-    "vuetify": "^3.5.0",
-    "webfontloader": "^1.6.28"
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/inter": "^5.0.16",
+    "@mui/joy": "^5.0.0-beta.23",
+    "@rdkit/rdkit": "^2023.9.2-1.0.0",
+    "ketcher-react": "^2.15.1",
+    "ketcher-standalone": "^2.15.1",
+    "lodash": "^4.17.21",
+    "next": "^14.1.0",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@babel/types": "^7.23.6",
-    "@types/node": "^18.19.8",
-    "@types/webfontloader": "^1.6.38",
-    "@vitejs/plugin-vue": "^4.6.2",
-    "@vue/eslint-config-typescript": "^11.0.3",
-    "eslint": "^8.56.0",
-    "eslint-plugin-vue": "^9.20.1",
-    "typescript": "^5.3.3",
-    "vite": "^4.5.2",
-    "vite-plugin-vuetify": "^1.0.2",
-    "vue-tsc": "^1.8.27"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8",
+    "typescript": "^5"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }

@@ -78,8 +78,19 @@ Content-Type: application/json
 }
 
 
+### Query taxa - taxon name
+POST http://127.0.0.1:5000/v1_0/taxa
+Accept: application/json
+Content-Type: application/json
+
+{
+  "taxon_name": "Ta"
+}
+
+
 ### Query taxa - structure wid and taxon wid and reference wid
 POST http://127.0.0.1:5000/v1_0/taxa
+### Query taxa - structure wid and taxon wid and reference wid
 Accept: application/json
 Content-Type: application/json
 

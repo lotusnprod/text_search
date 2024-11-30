@@ -14,11 +14,12 @@ from api.models import (
     StructureResult,
     TaxonObject,
     TaxonResult,
-    TripletResult,
+    TripletResult, StructureDetails,
 )
 from api.queries import (
     get_references_for_item,
     get_structures_for_item,
+    get_structure_details,
     get_taxa_for_item,
     get_triplets_for_item,
 )
@@ -139,6 +140,11 @@ async def search_structures(
             description="Structures matching the query",
             count=len(dict_items),
         )
+
+@app.get("/structure")
+@version(1, 0)
+async def structure_details(structure_id: int, dm: DataModel = Depends(get_data_model)) -> StructureDetails:
+        return get_structure_details(structure_id, dm)
 
 
 @app.post("/taxa")

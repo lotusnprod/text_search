@@ -11,7 +11,7 @@ from rdkit.Chem import rdSubstructLibrary
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import aliased
 
-from api.models import ReferenceObject, StructureObject, TaxonObject
+from api.models import ReferenceObject, StructureObject, TaxonObject, StructureDetails
 from chemistry_helpers import fingerprint, standardize
 from sdf_helpers import find_structures_bytes_ranges, mmap_file, read_selected_ranges
 from storage.models import (
@@ -74,7 +74,7 @@ class DataModel:
 
     ### Taxonomy
     def get_taxon_object_from_dict_of_tids(
-        self, tids: Iterable[int]
+            self, tids: Iterable[int]
     ) -> dict[int, TaxonObject]:
         with self.storage.session() as session:
             result = (
@@ -157,7 +157,7 @@ class DataModel:
         return self.get_structure_object_from_dict_of_sids([sid])
 
     def get_structure_descriptors_from_dict_of_sids(
-        self, sids: Iterable[int]
+            self, sids: Iterable[int]
     ) -> Iterable[tuple[int, str]]:
         with self.storage.session() as session:
             result = (
@@ -181,7 +181,7 @@ class DataModel:
                 return result_dict
 
     def get_structure_sdf_from_dict_of_sids(
-        self, sids: Iterable[int]
+            self, sids: Iterable[int]
     ) -> Iterable[tuple[int, str]]:
         ranges = self.sdf_ranges
         blocks = []
@@ -190,9 +190,9 @@ class DataModel:
         return "".join(blocks)
 
     def get_structure_object_from_dict_of_sids(
-        self,
-        sids: Iterable[int],
-        return_descriptors: bool = False,
+            self,
+            sids: Iterable[int],
+            return_descriptors: bool = False,
     ) -> dict[int, StructureObject]:
         with self.storage.session() as session:
             descriptors = {}
@@ -302,7 +302,7 @@ class DataModel:
         return [(wid, score) for wid, score in zip(self.db["structure_wid"], scores)]
 
     def structure_search_substructure(
-        self, query: str, chirality: bool = False
+            self, query: str, chirality: bool = False
     ) -> list[tuple[int, float]]:
         mol, fp, explicit_h = self.structure_get_mol_fp_and_explicit(query)
 
@@ -347,7 +347,7 @@ class DataModel:
             return {row[0] for row in result}
 
     def get_reference_object_from_dict_of_rids(
-        self, rids: Iterable[int]
+            self, rids: Iterable[int]
     ) -> dict[int, ReferenceObject]:
         with self.storage.session() as session:
             result = (
@@ -398,7 +398,7 @@ class DataModel:
             return {row[0] for row in result}
 
     def get_references_with_date(
-        self, date_min: str = None, date_max: str = None
+            self, date_min: str = None, date_max: str = None
     ) -> set[int]:
         with self.storage.session() as session:
             query = session.query(References.id)
@@ -503,10 +503,10 @@ class DataModel:
         )
 
     def get_triplets_for(
-        self,
-        reference_ids: set[int] | None,
-        structure_ids: set[int] | None,
-        taxon_ids: set[int] | None,
+            self,
+            reference_ids: set[int] | None,
+            structure_ids: set[int] | None,
+            taxon_ids: set[int] | None,
     ) -> set[tuple[int, int, int]]:
         return self.storage.get_triplets_for(reference_ids, structure_ids, taxon_ids)
 
@@ -549,3 +549,24 @@ class DataModel:
             matcher = TaxoNames.name.like(f"{taxon_name}%")
             result = session.query(TaxoNames.name, TaxoNames.id).filter(matcher)
         return {row[0]: row[1] for row in result}
+
+    def get_structure_details(self, structure_id: int) -> StructureDetails:
+        with (self.storage.session() as session):
+            structure_details = session.query(Structures.inchi,
+                                              Structures.smiles, Structures.formula, Structures.inchi_no_stereo,
+                                              Structures.inchikey
+                                              ).filter(Structures.id == structure_id).first()
+            structure_descriptors = session.query(StructuresDescriptors.descriptor_name,
+                                                  StructuresDescriptors.descriptor_value).filter(
+                StructuresDescriptors.structure_id == structure_id)
+
+            properties = {item[0]: float(item[1]) for item in structure_descriptors}
+
+            return StructureDetails(
+                inchi=structure_details.inchi,
+                smiles=structure_details.smiles,
+                formula=structure_details.formula,
+                inchi_no_stereo=structure_details.inchi_no_stereo,
+                inchikey=structure_details.inchikey,
+                properties=properties
+            )

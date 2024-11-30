@@ -11,9 +11,10 @@ from api.models import (
     StructureItem,
     StructureOption,
     TaxonItem,
-    TaxonOption,
+    TaxonOption, StructureDetails, TaxonObject, ReferenceObject,
 )
 from model.data_model import DataModel
+from storage.models import Structures
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -290,7 +291,7 @@ def get_structures_for_item(item: Item, dm: DataModel) -> dict[int, str]:
     )
 
 
-def get_taxa_for_item(item: Item, dm: DataModel) -> dict[int, str]:
+def get_taxa_for_item(item: Item, dm: DataModel) -> dict[int, TaxonObject]:
     ids = combine_and_filter_outputs(
         [
             taxa_from_taxon_in_item(dm, item),
@@ -303,7 +304,7 @@ def get_taxa_for_item(item: Item, dm: DataModel) -> dict[int, str]:
     return dm.get_taxon_object_from_dict_of_tids(ids)
 
 
-def get_references_for_item(item: Item, dm: DataModel) -> dict[int, str]:
+def get_references_for_item(item: Item, dm: DataModel) -> dict[int, ReferenceObject]:
     ids = combine_and_filter_outputs(
         [
             references_from_reference_in_item(dm, item),
@@ -314,3 +315,7 @@ def get_references_for_item(item: Item, dm: DataModel) -> dict[int, str]:
     )
 
     return dm.get_reference_object_from_dict_of_rids(ids)
+
+
+def get_structure_details(structure_id: int, dm: DataModel) -> StructureDetails:
+    return dm.get_structure_details(structure_id)
